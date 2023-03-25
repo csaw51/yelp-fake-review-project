@@ -21,6 +21,14 @@ for i in range(length):
     data.iloc[i, 6] = len(data[(data['date'] == date_i) & (data['user_id'] == user_i)])
     user_data = data[data['user_id'] == user_i].groupby(by='date', axis=0).count()
     data['max_24'][i] = user_data['review'].max()
+    
+    #review ratios
+    user_review_count = len(data[data['user_id'] == user_i])
+    user_positive = len(data[(data['user_id'] == user_i) & (data['rating'] >=4)])
+    user_negative = len(data[(data['user_id'] == user_i) & (data['rating'] <= 2)])
+    
+    data['positive_ratio'][i] = user_positive/user_review_count
+    data['negative_ratio'][i] = user_negative/user_review_count
 
 from numpy import savetxt
 savetxt("reviews_behavioral.txt",join_data,fmt="%s",delimiter="\t",encoding="utf-8")
