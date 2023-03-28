@@ -163,9 +163,9 @@ for i in range(length):
         corpus_vec = vectorizer.fit_transform(corpus['lemma'])
         cos_sim = cosine_similarity(corpus_vec, corpus_vec)
         sum_cos = -1
-        for p in range(len(user_reviews)):
+        for p in range(len(corpus)):
             sum_cos += cos_sim[0][p]
-            review4['cos_sim'][i] = sum_cos/len(user_reviews)
+        review4['cos_sim'][i] = sum_cos/len(corpus)
 #    for k in range(len(corpus)):
 # 
 #        revA_sim = []
