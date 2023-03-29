@@ -162,11 +162,13 @@ def transform_and_lemmatize_text(df_col, stop_words=None):
     lemmatizer = spacy.load('en_core_web_sm', disable=['parser', 'ner'])
     analyzer = TfidfVectorizer(stop_words=stop_words).build_analyzer()
     new_df_col = df_col.apply(lambda x: lemmatize_text(x, analyzer, lemmatizer))
+
     logging.info(f"{new_df_col.shape[0]} rows processed in {calc_time_diff(starttime, datetime.now())} seconds")
     return new_df_col
 
 
 def create_text_summary_features(df, positive_words, negative_words):
+    starttime = datetime.now()
     nltk_pos_word_map = {'noun': 'NN',
                          'verb': 'VB',
                          'adverb': 'RB',
@@ -175,8 +177,11 @@ def create_text_summary_features(df, positive_words, negative_words):
                           'negative': set(negative_words)}
     spellcheck = SpellChecker()
     output = []
+    line_num = 0
 
+    logging.info("Beginning text summary feature creation")
     for i in range(df.shape[0]):
+
         feature_dict = {}
         sentence = df.cleaned_text.iloc[i]
         pos_counts = Counter([y for x, y in nltk.pos_tag(sentence)])
@@ -198,13 +203,58 @@ def create_text_summary_features(df, positive_words, negative_words):
 
         output.append(feature_dict)
 
+        if i % 10000 == 0:
+            logging.info(f"Processed rows {line_num} to {i} in {calc_time_diff(starttime, datetime.now())} seconds")
+            line_num = i
+            starttime = datetime.now()
+
     return pd.DataFrame(output)
+
+
+def create_behavioral_summary_features(df):
+    starttime = datetime.now()
+    logging.info("Beginning behavioral summary feature creation")
+    # previous_user_reviews
+    df['previous_user_reviews'] = df.sort_values(['user_id', 'date']).groupby('user_id').cumcount()
+
+    # Avg/total user sentiment/review
+    user_id_counts = df[['user_id', 'sentiment', 'review']].groupby('user_id').agg(
+        {'sentiment': ['mean'],
+         'review': ['mean', 'count']})
+    user_id_counts.columns = ['avg_user_sentiment', 'avg_user_review', 'total_user_reviews']
+
+    # Positive/Negative review ratio
+    positive_reviews = df[df['rating'] >= 4][['user_id', 'rating']]\
+        .groupby('user_id').count().rename({'count': 'positive_reviews'}, axis=1)
+    negative_reviews = df[df['rating'] <= 2][['user_id', 'rating']]\
+        .groupby('user_id').count().rename({'count': 'negative_reviews'}, axis=1)
+    user_id_counts = user_id_counts.merge(positive_reviews, on='user_id', how='left')\
+        .merge(negative_reviews, on='user_id', how='left')
+    user_id_counts['positive_review_ratio'] = user_id_counts['positive_reviews'].fillna(0) / user_id_counts['total_user_reviews']
+    user_id_counts['negative_review_ratio'] = user_id_counts['negative_reviews'].fillna(0) / user_id_counts['total_user_reviews']
+
+    # Last 24 hours
+    user_date_counts = df[['user_id', 'date']].groupby(['user_id', 'date']).count().rename({'count': 'user_reviews_previous_24h'}).reset_index()
+    max_reviews_24h = user_date_counts[['user_id', 'user_reviews_previous_24h']].groupby('user_id').max().rename({'max': 'max_user_reviews_24h'})
+
+    # Merging all the user df's together:
+    user_id_counts.merge(user_date_counts, on='user_id', how='inner').merge(max_reviews_24h, on='user_id', how='inner')
+
+    # Business_reviews
+    business_id_counts = df[['business_id', 'sentiment']].groupby('business_id').agg(
+        {'sentiment': ['mean'],
+         'review': ['mean', 'count']})
+    business_id_counts.columns = ['avg_business_sentiment', 'avg_business_review', 'total_business_reviews']
+
+    logging.info(f"{df.shape[0]} rows processed in {calc_time_diff(starttime, datetime.now())} seconds")
+
+    return df.merge(user_id_counts, on='user_id').merge(business_id_counts, on='business_id')
 
 
 if __name__ == '__main__':
     # TODO: Add spelling correction to pre-processing
     # TODO: Optimize clause count code and add to feature list
-    # TODO: Add behavior summary features
+    # TODO: Add personal pronoun count
     logging.basicConfig(level='info')
     filepath = sys.argv[1]
     df = read_json(filepath)
