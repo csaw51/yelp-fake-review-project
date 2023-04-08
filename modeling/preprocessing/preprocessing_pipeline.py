@@ -1,13 +1,6 @@
 import json
 import csv
 import re
-from textblob import TextBlob
-import nltk
-from langdetect import detect
-nltk.download("words")
-from nltk.corpus import words
-from nltk.metrics.distance import jaccard_distance
-from nltk.util import ngrams
 import sys
 import logging
 
@@ -16,11 +9,10 @@ from collections import Counter
 
 import numpy as np
 import pandas as pd
-import nltk
 import spacy
+import nltk
 
 from sklearn.feature_extraction.text import TfidfVectorizer
-from nltk.corpus import stopwords
 from spellchecker import SpellChecker
 from sklearn.metrics.pairwise import cosine_similarity
 
@@ -225,7 +217,7 @@ def check_clauses(doc):
             for token_span in token_spans:
                 start = token_span[0]
                 end = token_span[1]
-                if (start < end):
+                if start < end:
                     clause = doc[start:end]
                     sentence_clauses.append(clause)
             return len(sentence_clauses)
@@ -233,37 +225,6 @@ def check_clauses(doc):
             return 0
     else:
         return 0
-
-
-def correct_word_spelling(word):
-    interjections_list = ['aha', 'ahem', 'ahh', 'ahoy', 'alas', 'arg', 'aw', 'bam', 'bingo',
-                          'blah', 'boo', 'bravo', 'brrr', 'cheers', 'congratulations',
-                          'dang', 'drat', 'darn', 'duh', 'eek', 'eh', 'encore', 'eureka',
-                          'fiddlesticks', 'gadzooks', 'gee', 'golly', 'goodness', 'gosh',
-                          'haha', 'hallelujah', 'hey', 'hmm', 'huh', 'hurray', 'humph',
-                          'oh', 'oops', 'ouch', 'ow', 'phew', 'phooey', 'pooh', 'pow',
-                          'shh', 'shoo', 'ugh', 'wahoo', 'whoa', 'whoops', 'wow',
-                          'yikes', 'yeah', 'yippee', 'yo', 'yuck']
-    correct_words = words.words()
-    corrected_word = word
-
-    if word not in interjections_list:
-        corrected_word = str(TextBlob(word).correct())
-        try:
-            if detect(corrected_word) == 'en' and len(corrected_word) > 0:
-                j_distances = [(jaccard_distance(set(ngrams(word, 2)),
-                                                 set(ngrams(w, 2))),
-                                w)
-                               for w in correct_words if w[0] == word[0]]
-
-                corrected_word = sorted(j_distances, key=lambda val: val[0])[0][1]
-
-        except Exception as e:
-            logging.error(f'Error correcting the spelling of {word}: {e}')
-
-        corrected_word = str(TextBlob(corrected_word).correct())
-
-    return corrected_word
 
 
 def create_text_summary_features(df, positive_words, negative_words, n_process=1, correct_spelling=False):
@@ -287,11 +248,47 @@ def create_text_summary_features(df, positive_words, negative_words, n_process=1
     i = 0
     personal_pronouns = {'i', 'you', 'u', 'he', 'she', 'it', 'we',
                          'they', 'me', ' him', 'her', 'us', ' them'}
+    if correct_spelling:
+        # Removing all the spelling correction dependencies unless correct_spelling is True
+        from textblob import TextBlob
+        from langdetect import detect
+        from nltk.corpus import words
+        from nltk.metrics.distance import jaccard_distance
+        from nltk.util import ngrams
+        nltk.download("words")
+        def correct_word_spelling(word):
+            interjections_list = ['aha', 'ahem', 'ahh', 'ahoy', 'alas', 'arg', 'aw', 'bam', 'bingo',
+                                  'blah', 'boo', 'bravo', 'brrr', 'cheers', 'congratulations',
+                                  'dang', 'drat', 'darn', 'duh', 'eek', 'eh', 'encore', 'eureka',
+                                  'fiddlesticks', 'gadzooks', 'gee', 'golly', 'goodness', 'gosh',
+                                  'haha', 'hallelujah', 'hey', 'hmm', 'huh', 'hurray', 'humph',
+                                  'oh', 'oops', 'ouch', 'ow', 'phew', 'phooey', 'pooh', 'pow',
+                                  'shh', 'shoo', 'ugh', 'wahoo', 'whoa', 'whoops', 'wow',
+                                  'yikes', 'yeah', 'yippee', 'yo', 'yuck']
+            correct_words = words.words()
+            corrected_word = word
+
+            if word not in interjections_list:
+                corrected_word = str(TextBlob(word).correct())
+                try:
+                    if detect(corrected_word) == 'en' and len(corrected_word) > 0:
+                        j_distances = [(jaccard_distance(set(ngrams(word, 2)),
+                                                         set(ngrams(w, 2))),
+                                        w)
+                                       for w in correct_words if w[0] == word[0]]
+
+                        corrected_word = sorted(j_distances, key=lambda val: val[0])[0][1]
+
+                except Exception as e:
+                    logging.error(f'Error correcting the spelling of {word}: {e}')
+
+                corrected_word = str(TextBlob(corrected_word).correct())
+
+            return corrected_word
 
     logging.info("Beginning text summary feature creation")
     nlp = spacy.load('en_core_web_sm', disable=['ner'])
     for doc in nlp.pipe(df.cleaned_text, n_process=n_process):
-
         feature_dict = {}
         pos_counts = Counter()
         text = []
@@ -331,7 +328,7 @@ def create_text_summary_features(df, positive_words, negative_words, n_process=1
         if lemma:
             feature_dict['avg_word_len'] = np.mean([len(word) for word in lemma])
             feature_dict['lexical_diversity'] = len(set(lemma)) / len(lemma)
-            feature_dict['sentiment'] = ((positive_words - negative_words)
+            feature_dict['sentiment'] = ((positive_word_count - negative_word_count)
                                          / len(lemma))
         else:
             feature_dict['avg_word_len'] = 0.
@@ -349,8 +346,8 @@ def create_text_summary_features(df, positive_words, negative_words, n_process=1
         except ZeroDivisionError:
             feature_dict['emotiveness_ratio'] = 0.0
 
-        feature_dict['num_positive_words'] = positive_words
-        feature_dict['num_negative_words'] = negative_words
+        feature_dict['num_positive_words'] = positive_word_count
+        feature_dict['num_negative_words'] = negative_word_count
         feature_dict['num_clauses'] = check_clauses(doc)
         output.append(feature_dict)
 
@@ -418,7 +415,14 @@ def create_behavioral_summary_features(df):
 
 
 if __name__ == '__main__':
-    logging.basicConfig(level='info')
+    logger = logging.getLogger()
+    logger.setLevel(logging.DEBUG)
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    handler = logging.StreamHandler()
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    logging.info('Start of pre-processing script')
+
     filepath = sys.argv[1]
     raw_data = read_json(filepath)
     logging.info(f"Collected df with {raw_data.shape[0]} rows")
@@ -428,11 +432,15 @@ if __name__ == '__main__':
     negative_words = set(read_txt_file(neg_word_path))
 
     # Data cleaning
-    raw_data['cleaned_text'] = fix_review_encoding(raw_data['review'])
+    raw_data['cleaned_text'] = fix_review_encoding(raw_data['text'])
     raw_data['cleaned_text'] = fix_contractions(raw_data['cleaned_text'])
     raw_data['cleaned_text'] = clean_text(raw_data['cleaned_text'])
 
-    summary_features = create_text_summary_features(raw_data, positive_words, negative_words, n_process=8,
+    summary_features = create_text_summary_features(raw_data,
+                                                    positive_words,
+                                                    negative_words,
+                                                    n_process=8,
                                                     correct_spelling=False)
     combined = pd.concat([raw_data, summary_features], axis=1).rename({'product_id': 'business_id'}, axis=1)
     all_features = create_behavioral_summary_features(combined)
+    all_features.to_csv('../../data/yelp_all/preprocessed_dataset.csv', sep='\t')
