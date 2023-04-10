@@ -383,6 +383,7 @@ def create_behavioral_summary_features(df):
          'lemma': [lambda x: get_review_cosine_similarity(x, vectorizer)]})
     user_id_counts.columns = ['avg_user_sentiment', 'avg_user_rating',
                               'total_user_reviews', 'user_content_similarity']
+    logging.info(f'Finished getting user counts')
 
     # Positive/Negative review ratio
     positive_reviews = df[df['rating'] >= 4][['user_id', 'rating']] \
@@ -393,12 +394,14 @@ def create_behavioral_summary_features(df):
         .merge(negative_reviews, on='user_id', how='left').fillna(0)
     user_id_counts['positive_review_ratio'] = user_id_counts['positive_reviews'] / user_id_counts['total_user_reviews']
     user_id_counts['negative_review_ratio'] = user_id_counts['negative_reviews'] / user_id_counts['total_user_reviews']
+    logging.info(f'Finished getting positive/negative review ratios')
 
     # Last 24 hours
     user_date_counts = df[['user_id', 'date', 'review']].groupby(['user_id', 'date']).count().rename(
         {'review': 'user_reviews_previous_24h'}, axis=1).reset_index()
     max_reviews_24h = user_date_counts[['user_id', 'user_reviews_previous_24h']].groupby('user_id').max().rename(
         {'max': 'max_user_reviews_24h'})
+    logging.info(f'Finished getting reviews in last 24 hours')
 
     # Merging all the user df's together:
     user_id_counts.merge(user_date_counts, on='user_id', how='inner').merge(max_reviews_24h, on='user_id', how='inner')
@@ -424,7 +427,7 @@ if __name__ == '__main__':
     logging.info('Start of pre-processing script')
 
     filepath = sys.argv[1]
-    raw_data = read_json(filepath)
+    raw_data = read_json(filepath).rename({'stars': 'rating', 'text': 'review'}, axis=1)
     logging.info(f"Collected df with {raw_data.shape[0]} rows")
     pos_word_path = '../../data/preprocessing and features for modeling/Opinion Lexicon/positive-words.txt'
     neg_word_path = '../../data/preprocessing and features for modeling/Opinion Lexicon/negative-words.txt'
@@ -432,7 +435,7 @@ if __name__ == '__main__':
     negative_words = set(read_txt_file(neg_word_path))
 
     # Data cleaning
-    raw_data['cleaned_text'] = fix_review_encoding(raw_data['text'])
+    raw_data['cleaned_text'] = fix_review_encoding(raw_data['review'])
     raw_data['cleaned_text'] = fix_contractions(raw_data['cleaned_text'])
     raw_data['cleaned_text'] = clean_text(raw_data['cleaned_text'])
 
