@@ -1,8 +1,9 @@
-function buildBarchart(srt_tmp, selectedCategory, zipcode, margin) {
+function buildBarchart(srt_tmp, selectedCategory, zipcode, colorScale) {
     // define the dimensions and margins for the bar chart
     const margin2 = {top: 30, right: 30, bottom: 70, left: 140},
-    width2 = 550 - margin.left - margin.right,
-    height2 = 450 - margin.top - margin.bottom;
+    width2 = 640 - margin2.left - margin2.right,
+    height2 = 450 - margin2.top - margin2.bottom;
+
     // bar chart svg
     const svgbar = d3
         .select("#chloropleth")
@@ -26,12 +27,12 @@ function buildBarchart(srt_tmp, selectedCategory, zipcode, margin) {
     bars.selectAll("rect").remove();
     // define x scale
     var xbar = d3.scaleLinear()
-        .domain([0, d3.max(srt_tmp, function(d) {return d.fake_reviews;})])
+        .domain([0, d3.max(srt_tmp, function(d) {return d.fake_review_count;})])
         .range([ 0, width2]);
     // define y scale
     var ybar = d3.scaleBand()
         .range([ 0,  height2])
-        .domain(srt_tmp.map(function(d) { return d.name;}).slice(0,15))
+        .domain(srt_tmp.map(function(d) { return d.name.slice(0,15)}))
         .padding(.1);
     // define x-axis
     var xAxis2 = d3.axisBottom()
@@ -58,10 +59,13 @@ function buildBarchart(srt_tmp, selectedCategory, zipcode, margin) {
         .enter()
         .append("rect")
         .attr("x", xbar(0))
-        .attr("y", srt_tmp.map(function(d) { return ybar(d.name); }).slice(0,15))
-        .attr("width", function(d) { return xbar(d.fake_reviews)})
+        .attr("y", function(d) { return ybar(d.name.slice(0,15)) })
+        .attr("width", function(d) { return xbar(d.fake_review_count) })
         .attr("height", ybar.bandwidth() )
-        .attr("fill", "Steelblue");
+        .attr("fill", function(d){return colorScale(d.fake_review_pct)});
+
+//{return getColor(d.properties.ZCTA5CE10);})
+
     // Add the text label for X Axis
     svgbar.append("text")
         .attr("id", "bar_x_axis_label")
@@ -69,7 +73,8 @@ function buildBarchart(srt_tmp, selectedCategory, zipcode, margin) {
         .style("text-anchor", "middle")
         .attr("transform", `translate(${width2/2},${height2*1.15})`)
         .style('fill', 'Black')
-        .attr("font-size", "20px")
+        .attr("font-weight", 500)
+        .attr("font-size", "15px")
     ;
     // Add the text label for Y axis
     svgbar.append("text")
@@ -81,7 +86,8 @@ function buildBarchart(srt_tmp, selectedCategory, zipcode, margin) {
         .attr("dy", -20)
         .style("text-anchor", "middle")
         .style('fill', 'Black')
-        .attr("font-size", "20px");
+        .attr("font-weight", 500)
+        .attr("font-size", "15px");
 
     // Add chart title
     svgbar.append("text")
@@ -91,10 +97,11 @@ function buildBarchart(srt_tmp, selectedCategory, zipcode, margin) {
         .attr("transform", `translate(${width2/2},${-10})`)
         .style('fill', 'Black')
         .attr("font-weight", 700)
-        .attr("font-size", "25px")
+        .attr("font-size", "22px")
 
     // Display bar chart
-    d3.select("#bar_chart").style("display", "inline");
+    d3.select("#bar_chart");
+
 };
 
 export {buildBarchart}
