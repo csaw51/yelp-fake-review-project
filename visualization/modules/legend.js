@@ -4,7 +4,7 @@
 function Legend(color, {
   legendGroup,
   title,
-    y = 0,
+  y = 0,
   tickSize = 6,
   legendWidth = 320,
   legendHeight = 44 + tickSize,
@@ -28,13 +28,6 @@ function Legend(color, {
     }
     return canvas;
   }
-
-  const svg = d3.create("svg")
-      .attr("width", legendWidth)
-      .attr("height", legendHeight)
-      .attr("viewBox", [0, 0, legendWidth, legendHeight])
-      .style("overflow", "visible")
-      .style("display", "block");
 
   let tickAdjust = g => g.selectAll(".tick line").attr("y1", marginTop + marginBottom - legendHeight);
   let x;
@@ -79,6 +72,7 @@ function Legend(color, {
       }
     }
   }
+
   legendGroup.append("g")
       .attr("transform", `translate(0,${legendHeight - marginBottom + y})`)
       .call(d3.axisBottom(x)
@@ -97,7 +91,18 @@ function Legend(color, {
         .attr("class", "title")
         .text(title));
 
-  return svg.node();
+  // Add the text label for X Axis
+  legendGroup.append("text")
+        .attr("id", "legend_label")
+        .text(title)
+        .style("text-anchor", "middle")
+        .attr("x", marginLeft + legendWidth/2)
+        .attr("y", marginTop + marginBottom - legendHeight/1.5 + y)
+        //.attr("transform", `translate(${legendWidth/2},${legendHeight - marginTop - marginBottom})`)
+        .style('fill', 'Black')
+        .attr("font-weight", 500)
+        .attr("font-size", "15px")
+
 }
 
 export {Legend};
