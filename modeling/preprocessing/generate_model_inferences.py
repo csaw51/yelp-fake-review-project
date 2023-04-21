@@ -18,9 +18,9 @@ id_columns = ['user_id', 'business_id']
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Pre-process yelp datasets')
-    parser.add_argument('input_path', )
-    parser.add_argument('output_path', )
-    parser.add_argument('model_path', )
+    parser.add_argument('--input_path', default='../data/yelp_academic_dataset_preprocessed.tsv')
+    parser.add_argument('--output_path', default='../data/reviews_with_predicted_label_final_rf.csv')
+    parser.add_argument('--model_path', default='../data/rf_final_model.pkl')
     args = parser.parse_args()
     model = joblib.load(args.model_path)
 

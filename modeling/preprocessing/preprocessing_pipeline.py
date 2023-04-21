@@ -343,10 +343,10 @@ if __name__ == '__main__':
 
     # Argument parsing
     parser = argparse.ArgumentParser(description='Pre-process yelp datasets')
-    parser.add_argument('input_path', )
-    parser.add_argument('output_path', )
-    parser.add_argument('--positive_word_path', default='positive-words.txt')
-    parser.add_argument('--negative_word_path', default='negative-words.txt')
+    parser.add_argument('--input_path', default='../data/yelp_academic_dataset_review.json')
+    parser.add_argument('--output_path', default='../data/yelp_academic_dataset_preprocessed.tsv')
+    parser.add_argument('--positive_word_path', default='../data/positive-words.txt')
+    parser.add_argument('--negative_word_path', default='../data/negative-words.txt')
     parser.add_argument('--n_process', default=4, type=int)
     args = parser.parse_args()
 

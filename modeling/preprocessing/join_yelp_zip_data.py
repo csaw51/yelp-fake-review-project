@@ -4,9 +4,9 @@ import argparse
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Pre-process yelp datasets')
-    parser.add_argument('metadata_path',)
-    parser.add_argument('review_content_path',)
-    parser.add_argument('output_path',)
+    parser.add_argument('--metadata_path', default='../data/metadata')
+    parser.add_argument('--review_content_path', default='../data/reviewContent')
+    parser.add_argument('--output_path', default='../data/yelpzip_joined.tsv')
     args = parser.parse_args()
 
     metadata = pd.read_csv(args.metadata_path,
