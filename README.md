@@ -19,7 +19,9 @@ Table of Contents:
 -------------------------------------------------------------------------------------------------------------
 
 ## 2. Quick-start Instructions
+
   Download and unzip the repository. Start up a localhost server and navigate to the root folder. Open 'main.html'.
+  
 -------------------------------------------------------------------------------------------------------------
 
 ## 3. Visualization Description
@@ -41,6 +43,7 @@ Table of Contents:
 ## 4. End-to-end Instructions
 
   1. All required python packages can be installed using the included requirements.txt:
+
      python -m pip install -r requirements.txt
 
   2. Pre-processing the YelpZip training data:
@@ -53,8 +56,8 @@ Table of Contents:
          - output_filepath={output tsv filepath}: Output filepath **The output path MUST end in .tsv in order for the next script to run**
 
   3. Once pre-processing is finished, we can run the full feature engineering python script:
-    - modeling/preprocessing/preprocessing_pipeline.py
-    - By default, this script is intended to run on the academic yelp dataset, and as such you will have to use the --input_path parameter to point it to the correct file, which is the output of the join_yelp_zip_data.py file from above.
+     - modeling/preprocessing/preprocessing_pipeline.py
+     - By default, this script is intended to run on the academic yelp dataset, and as such you will have to use the --input_path parameter to point it to the correct file, which is the output of the join_yelp_zip_data.py file from above.
        Usage: python preprocessing_pipeline.py --input_path='../data/yelpzip_joined.tsv'
        There are optional command line parameters that can be utilized as needed:
        - input_path={input path}: File path for input dataset
@@ -64,17 +67,18 @@ Table of Contents:
        - n_process={number of cpus}: The number of processes that the script will use while parallelizing the workload **For the YelpZip training data, the default of 4 should be fine, or use 1 if you are worried about CPU usage and the parallelism will be disabled**
      **WARNING**: This is a very large dataset and this script will take a very long time to complete. You should NOT attempt to run this script unless you have atleast 32GB of memory and over 8 hours of time. This preprocessing was done on a Windows 10 computer with 32GBs of memory and an 8-core processor, with total runtime of around 9 hours.
 
-4. Generating Model Predictions
-    The trained model can be found in modeling/data/rf_final_model.pkl. This muse be located in the same directory as the generate_model_inferences.py script. Once this is finished, it will produce a two-column CSV containing the review_id and the predicted review_label to the output file path.
+5. Generating Model Predictions
+
+   The trained model can be found in modeling/data/rf_final_model.pkl. This muse be located in the same directory as the generate_model_inferences.py script. Once this is finished, it will produce a two-column CSV containing the review_id and the predicted review_label to the output file path.
     Once the pickled model is imported, run the script in order to generate a file of inferences:
         python generate_model_inferences
         There are optional command line parameters that can be utilized as needed:
-        --input_path={input path}: Path to the preprocessed feature data from step 3
-        --output_path={output csv filepath}: Output file path
-        --model_path={model filepath}: Model file path
+        - input_path={input path}: Path to the preprocessed feature data from step 3
+        - output_path={output csv filepath}: Output file path
+        - model_path={model filepath}: Model file path
     This script is intended to be run on the preprocessed Yelp Academic dataset, however it will successfully run on the preprocessed YelpZip dataset as well, with a key difference being that the YelpZip output will contain the index column instead of review_id (as the YelpZip data does not contain a review_id). The YelpZip inferences WILL NOT work with the visualization, ONLY the Yelp Academic inferences will run with the visualization.
 
-5. Run DataProcessing.py to convert the model output into the visualization input. Start up a localhost server and navigate to the root folder. Open 'main.html'.
+7. Run DataProcessing.py to convert the model output into the visualization input. Start up a localhost server and navigate to the root folder. Open 'main.html'.
 
  -------------------------------------------------------------------------------------------------------------
 
