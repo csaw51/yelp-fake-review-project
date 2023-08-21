@@ -55,8 +55,8 @@ Table of Contents:
          - review_content_path={reviewContent filepath}: YelpZip review data
          - output_filepath={output tsv filepath}: Output filepath **The output path MUST end in .tsv in order for the next script to run**
 
-  3. Once pre-processing is finished, we can run the full feature engineering python script:
-     - modeling/preprocessing/preprocessing_pipeline.py
+  3. Feature engineering on preprocessed data:
+     -  Once pre-processing is finished, we can run the full feature engineering to add textual, behavioral, and TF-IDF features using modeling/preprocessing/preprocessing_pipeline.py
      - By default, this script is intended to run on the academic yelp dataset, and as such you will have to use the --input_path parameter to point it to the correct file, which is the output of the join_yelp_zip_data.py file from above.
        Usage: python preprocessing_pipeline.py --input_path='../data/yelpzip_joined.tsv'
        There are optional command line parameters that can be utilized as needed:
