@@ -102,8 +102,9 @@ An example visualization is shown below. The application can be tested locally b
        `python generate_model_inferences.py`
 
        There are optional command line parameters that can be utilized as needed:
-         - input_path={input path}: Path to the preprocessed feature data from step 3.
-         - output_path={output csv filepath}: File path for output dataset. Default: 'data/reviews_with_predicted_label_final_rf.csv'.
+       - fdsjlkfjsd
+     - input_path={input path}: Path to the preprocessed feature data from step 3.
+      - output_path={output csv filepath}: File path for output dataset. Default: 'data/reviews_with_predicted_label_final_rf.csv'.
          - model_path={model filepath}: Model file path. Must be downloaded from google drive as mentioned above, or can be generated using the [final results notebook](https://github.com/csaw51/yelp-fake-review-project/blob/main/python/notebooks/final_model_results.ipynb).
      
       **Note**: This script is intended to be run on the preprocessed Yelp Academic dataset, however it will successfully run on the preprocessed YelpZip dataset as well, with a key difference being that the YelpZip output will contain the index column instead of review_id (as the YelpZip data does not contain a review_id). The YelpZip inferences WILL NOT work with the visualization, ONLY the Yelp Academic inferences will run with the visualization.
