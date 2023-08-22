@@ -91,19 +91,22 @@ An example visualization is shown below. The application can be tested locally b
        - negative_word_path={negative-words path}: Point to the negative optinion lexicon file negative-words.txt
        - n_process={number of cpus}: The number of processes that the script will use while parallelizing the workload. **For the YelpZip training data, the default of 4 should be fine, or use 1 if you are worried about CPU usage and the parallelism will be disabled**
      
-     **WARNING**: This is a very large dataset and this script will take a very long time to complete. You should NOT attempt to run this script unless you have atleast 32GB of memory and over 8 hours of time. This preprocessing was done on a Windows 10 computer with 32GBs of memory and an 8-core processor, with total runtime of around 9 hours.
+       **WARNING**: This is a very large dataset and this script will take a very long time to complete. You should NOT attempt to run this script unless you have atleast 32GB of memory and over 8 hours of time. This preprocessing was done on a Windows 10 computer with 32GBs of memory and an 8-core processor, with total runtime of around 9 hours.
 
 5. Generating Model Predictions
 
-   The trained model can be downloaded from my personal [google drive](https://drive.google.com/drive/folders/1dtbj9AsoQ1mubjxAIrev9Q2kP62EBdGh?usp=sharing). This *must* be downloaded to python directory as it must be located in the same directory as the generate_model_inferences.py script. Once the script is finished running, it will produce a two-column CSV containing the review_id and the predicted review_label to the output file path.
+   - The trained model can be downloaded from [google drive](https://drive.google.com/drive/folders/1dtbj9AsoQ1mubjxAIrev9Q2kP62EBdGh?usp=sharing), or can be generated using the [final results notebook](https://github.com/csaw51/yelp-fake-review-project/blob/main/python/notebooks/final_model_results.ipynb). This *must* be downloaded or generated to the same directory as the generate_model_inferences.py script.
+   - Once the script is finished running, it will produce a two-column CSV containing the review_id and the predicted review_label to the output file path.
+   - Once the pickled model is imported, run the script in order to generate a file of inferences:
 
-   Once the pickled model is imported, run the script in order to generate a file of inferences:
-        `python generate_model_inferences.py`
-        There are optional command line parameters that can be utilized as needed:
-        - input_path={input path}: Path to the preprocessed feature data from step 3.
-        - output_path={output csv filepath}: File path for output dataset. Default: 'data/reviews_with_predicted_label_final_rf.csv'.
-        - model_path={model filepath}: Model file path. Must be downloaded from google drive as mentioned above, or can be generated using the [final results notebook](https://github.com/csaw51/yelp-fake-review-project/blob/main/python/notebooks/final_model_results.ipynb).
-    **Note**: This script is intended to be run on the preprocessed Yelp Academic dataset, however it will successfully run on the preprocessed YelpZip dataset as well, with a key difference being that the YelpZip output will contain the index column instead of review_id (as the YelpZip data does not contain a review_id). The YelpZip inferences WILL NOT work with the visualization, ONLY the Yelp Academic inferences will run with the visualization.
+       `python generate_model_inferences.py`
+
+       There are optional command line parameters that can be utilized as needed:
+         - input_path={input path}: Path to the preprocessed feature data from step 3.
+         - output_path={output csv filepath}: File path for output dataset. Default: 'data/reviews_with_predicted_label_final_rf.csv'.
+         - model_path={model filepath}: Model file path. Must be downloaded from google drive as mentioned above, or can be generated using the [final results notebook](https://github.com/csaw51/yelp-fake-review-project/blob/main/python/notebooks/final_model_results.ipynb).
+     
+      **Note**: This script is intended to be run on the preprocessed Yelp Academic dataset, however it will successfully run on the preprocessed YelpZip dataset as well, with a key difference being that the YelpZip output will contain the index column instead of review_id (as the YelpZip data does not contain a review_id). The YelpZip inferences WILL NOT work with the visualization, ONLY the Yelp Academic inferences will run with the visualization.
 
 6. Run the Visualization
    - Download zip code [geojson files](https://github.com/OpenDataDE/State-zip-code-GeoJSON) to the root of the data/json folder.
