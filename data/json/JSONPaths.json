@@ -1,0 +1,27 @@
+[
+{"state": "AZ", "json": "data\\json\\az_arizona_zip_codes_geo.min.json"},
+{"state": "CA", "json": "data\\json\\ca_california_zip_codes_geo.min.json"},
+{"state": "DE", "json": "data\\json\\de_delaware_zip_codes_geo.min.json"},
+{"state": "FL", "json": "data\\json\\fl_florida_zip_codes_geo.min.json"},
+{"state": "ID", "json": "data\\json\\id_idaho_zip_codes_geo.min.json"},
+{"state": "IL", "json": "data\\json\\il_illinois_zip_codes_geo.min.json"},
+{"state": "IN", "json": "data\\json\\in_indiana_zip_codes_geo.min.json"},
+{"state": "LA", "json": "data\\json\\la_louisiana_zip_codes_geo.min.json"},
+{"state": "MO", "json": "data\\json\\mo_missouri_zip_codes_geo.min.json"},
+{"state": "NJ", "json": "data\\json\\nj_new_jersey_zip_codes_geo.min.json"},
+{"state": "NV", "json": "data\\json\\nv_nevada_zip_codes_geo.min.json"},
+{"state": "PA", "json": "data\\json\\pa_pennsylvania_zip_codes_geo.min.json"},
+{"state": "TN", "json": "data\\json\\tn_tennessee_zip_codes_geo.min.json"},
+
+{"metro": "Boise", "json": "data\\json\\boise_outline.geojson"},
+{"metro": "Indianapolis", "json": "data\\json\\indianapolis.geojson"},
+{"metro": "Nashville", "json": "data\\json\\nashville_outline.geojson"},
+{"metro": "New Orleans", "json": "data\\json\\neworleans.geojson"},
+{"metro": "Philadelphia", "json": "data\\json\\philadelphia.geojson"},
+{"metro": "Reno", "json": "data\\json\\reno_outline.geojson"},
+{"metro": "Philadelphia", "json": "data\\json\\philadelphia_outline.geojson"},
+{"metro": "Santa Barbara", "json": "data\\json\\santabarbara_outline.geojson"},
+{"metro": "St. Louis", "json": "data\\json\\stlouis.geojson"},
+{"metro": "Tampa", "json": "data\\json\\tampa.geojson"},
+{"metro": "Tucson", "json": "data\\json\\tucson_outline.geojson"}
+]
