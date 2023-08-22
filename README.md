@@ -89,7 +89,8 @@ An example visualization is shown below. The application can be tested locally b
        - output_path={output tsv filepath}: File path for output dataset. Default: 'data/yelp_academic_dataset_preprocessed.tsv'.
        - positive_word_path={positive-words path}: Point to the positive opinion lexicon file postitive-words.txt
        - negative_word_path={negative-words path}: Point to the negative optinion lexicon file negative-words.txt
-       - n_process={number of cpus}: The number of processes that the script will use while parallelizing the workload **For the YelpZip training data, the default of 4 should be fine, or use 1 if you are worried about CPU usage and the parallelism will be disabled**
+       - n_process={number of cpus}: The number of processes that the script will use while parallelizing the workload. **For the YelpZip training data, the default of 4 should be fine, or use 1 if you are worried about CPU usage and the parallelism will be disabled**
+     
      **WARNING**: This is a very large dataset and this script will take a very long time to complete. You should NOT attempt to run this script unless you have atleast 32GB of memory and over 8 hours of time. This preprocessing was done on a Windows 10 computer with 32GBs of memory and an 8-core processor, with total runtime of around 9 hours.
 
 5. Generating Model Predictions
