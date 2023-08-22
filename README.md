@@ -43,7 +43,6 @@ An example visualization is shown below. The application can be tested locally b
   - Download and unzip the repository.
   - Download zip code [geojson files](https://github.com/OpenDataDE/State-zip-code-GeoJSON) to the root of the data/json folder.
   - Unzip data/data_merged.zip to the root of the data folder.
-  - Run python/DataProcessing.py to convert the model output into the visualization input. Start up a localhost server and navigate to the root folder. Open 'main.html'.
   - Start up a localhost server and navigate to the root folder. Open 'main.html'.
   
 -------------------------------------------------------------------------------------------------------------
