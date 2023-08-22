@@ -11,21 +11,27 @@ Table of Contents:
 
 ## 1. Introduction
 
-  This repo is for code and documentation around the Yelp fake review project in GTech's CSE6242 class. For this project we trained 5 classifiers on the YelpZip dataset, a binary classification problem that determined whether a review was real or fake. We compared the results between Support Vector Machine (SVM), Naive Bayes (NB), K-Nearest Neighbor (KNN), Logistic Regression (LR) and Random Forest (RF). We found RF with TF-IDF and SMOTE oversampling to be our best performing model, with an F1-score of 0.8. We then ran our model to generate labels for the Kaggle V4 Yelp dataset and developed an interactive visualization application with D3.js as an analytical tool. The full report [Detection and Visualization of Fraudlent Reviews on Yelp](https://github.com/csaw51/yelp-fake-review-project/blob/main/Detection_and_Visualization_of_Fraudulent_Reviews_on_Yelp.pdf) is published to the root of the repository.
+  This repo is for code and documentation around the Yelp fake review project in GTech's CSE6242 class. For this project we trained 5 classifiers on the YelpZip dataset, a binary classification problem that determined whether a review was real or fake. We compared the results between Support Vector Machine (SVM), Naive Bayes (NB), K-Nearest Neighbor (KNN), Logistic Regression (LR) and Random Forest (RF). 
+  
+  We found RF with TF-IDF and SMOTE oversampling to be our best performing model, with an F1-score of 0.8. We then ran our model to generate labels for the Kaggle V4 Yelp dataset and developed an interactive visualization application with D3.js as an analytical tool. The full report [Detection and Visualization of Fraudlent Reviews on Yelp](https://github.com/csaw51/yelp-fake-review-project/blob/main/Detection_and_Visualization_of_Fraudulent_Reviews_on_Yelp.pdf) is published to the root of the repository.
   
 The raw dataset was pre-processed and engineered using:
   - Synthetic minority over-sampling (SMOTE) for balancing the dataset
   - TF-IDF for sentiment analysis
   - Feature selection to remove highly correlated behavior and textual features
-![Development Flowchart](images/Flowchart.png)
+![Development Flowchart](images/Flowchart.png | width=100)
 *System design for model development*
 
-We compared the results of all combination of features, resampling techniques, and supervised learning algorithms. Final results are shown in the table below. The main evaluation used to quantify the performance of classification models were accuracy, precision, recall, and F1-score. From our data, it was evident that RF outperformed SVM, NB, KNN and LR using the combination of all features after removing multicollinearities with TF-IDF and using SMOTE as a resampling technique. It showed an overall accuracy of 77\%, 63\% recall for the minority class, and 79\% recall for the majority class in fake review detection. Behavioral features outperformed textual features where the accuracy had increased by 18.87\%. The addition of the TF-IDF features to the textual features improved accuracy from 53\% to 70\% using linear SVM and SMOTE, and the inclusion of behavioral features improved recall for the minority class from 45\% to 64\% in our baseline SVM model.
+We compared the results of all combination of features, resampling techniques, and supervised learning algorithms. Final results are shown in the table below. The main evaluation used to quantify the performance of classification models were accuracy, precision, recall, and F1-score. From our data, it was evident that RF outperformed SVM, NB, KNN and LR using the combination of all features after removing multicollinearities with TF-IDF and using SMOTE as a resampling technique. It showed an overall accuracy of 77\%, 63\% recall for the minority class, and 79\% recall for the majority class in fake review detection. 
+
+Behavioral features outperformed textual features where the accuracy had increased by 18.87\%. The addition of the TF-IDF features to the textual features improved accuracy from 53\% to 70\% using linear SVM and SMOTE, and the inclusion of behavioral features improved recall for the minority class from 45\% to 64\% in our baseline SVM model.
 
 ![Final Results](images/Results_Table.png)
 *Results of experiments using different models and over/down-sampling techniques*
 
-To prepare the data for the visualization, we performed exploratory data analysis (EDA) using pandas, matplotlib, and an in-memory SAS visualization tool. This informed our pre-visualization manipulation strategy and revealed several data cleanup and transformation tasks, such as misaligned zip codes and spelling errors in address fields. An example visualization is shown below. The application can be tested locally by downloading the repository and following the quick-start instructions in section 2. An in-depth description of the visualization features are included in section 3 and are further described in the report.
+To prepare the data for the visualization, we performed exploratory data analysis (EDA) using pandas, matplotlib, and an in-memory SAS visualization tool. This informed our pre-visualization manipulation strategy and revealed several data cleanup and transformation tasks, such as misaligned zip codes and spelling errors in address fields. 
+
+An example visualization is shown below. The application can be tested locally by downloading the repository and following the quick-start instructions in section 2. An in-depth description of the visualization features are included in section 3 and are further described in the report.
 
 ![Final Results](images/Visualization.png)
 *Example from visualization application written in D3.js showing percentage of fake reviews by zipcode for restaurants in Philadelphia.*
