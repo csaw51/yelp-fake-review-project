@@ -11,10 +11,12 @@ Table of Contents:
 
 ## 1. Introduction
 
-  This repo is for code and documentation around the Yelp fake review project in GTech's CSE6242 class. For this project we trained 5 classifiers using the YelpZip dataset, a binary classification problem that determined whether a review was real or fake. We compared the results between Support Vector Machine (SVM), Naive Bayes, K-Nearest Neighbor (KNN), Logistic Regression (LR) and Random Forest (RF). The raw dataset was pre-processed using:
-  - TF-IDF to extract behavior
+  This repo is for code and documentation around the Yelp fake review project in GTech's CSE6242 class. For this project we trained 5 classifiers using the YelpZip dataset, a binary classification problem that determined whether a review was real or fake. We compared the results between Support Vector Machine (SVM), Naive Bayes, K-Nearest Neighbor (KNN), Logistic Regression (LR) and Random Forest (RF). The raw dataset was pre-processed and engineered using:
   - SMOTE for resampling of the minority class
+  - TF-IDF for sentiment analysis
   - Feature selection to remove high correlation behavior and textual features
+![Development Flowchart](images/Flowchart.png)
+*System design for model development*
 
 -------------------------------------------------------------------------------------------------------------
 
