@@ -11,12 +11,21 @@ Table of Contents:
 
 ## 1. Introduction
 
-  This repo is for code and documentation around the Yelp fake review project in GTech's CSE6242 class. For this project we trained 5 classifiers using the YelpZip dataset, a binary classification problem that determined whether a review was real or fake. We compared the results between Support Vector Machine (SVM), Naive Bayes, K-Nearest Neighbor (KNN), Logistic Regression (LR) and Random Forest (RF). The raw dataset was pre-processed and engineered using:
-  - SMOTE for resampling of the minority class
+  This repo is for code and documentation around the Yelp fake review project in GTech's CSE6242 class. For this project we trained 5 classifiers on the YelpZip dataset, a binary classification problem that determined whether a review was real or fake. We compared the results between Support Vector Machine (SVM), Naive Bayes (NB), K-Nearest Neighbor (KNN), Logistic Regression (LR) and Random Forest (RF). We found ___ to be our best performing model with a ___ of ___. The full report [Detection and Visualization of Fraudlent Reviews on Yelp](https://github.com/csaw51/yelp-fake-review-project/blob/main/Detection_and_Visualization_of_Fraudulent_Reviews_on_Yelp.pdf) is published to the root of the repository.
+  
+The raw dataset was pre-processed and engineered using:
+  - SMOTE for over-sampling of the minority class
   - TF-IDF for sentiment analysis
-  - Feature selection to remove high correlation behavior and textual features
+  - Feature selection to remove highly correlated behavior and textual features
 ![Development Flowchart](images/Flowchart.png)
 *System design for model development*
+
+We compared the results of all combination of features, resampling techniques, and supervised learning algorithms. Final results are shown in the table below. The main evaluation used to quantify the performance of classification models were accuracy, precision, recall, and F1-score. From our data, it was evident that RF outperformed SVM, NB, KNN and LR using the combination of all features after removing multicollinearities with TF-IDF and using SMOTE as a resampling technique. It showed an overall accuracy of 77\%, 63\% recall for the minority class, and 79\% recall for the majority class in fake review detection. Behavioral features outperformed textual features where the accuracy had increased by 18.87\%. The addition of the TF-IDF features to the textual features improved accuracy from 53\% to 70\% using linear SVM and SMOTE, and the inclusion of behavioral features improved recall for the minority class from 45\% to 64\% in our baseline SVM model.
+
+![Final Results](images/Results_Table.png)
+*Results of experiments using different models and over/down-sampling techniques*
+
+To prepare the data for the visualization, we performed exploratory data analysis (EDA) using pandas, matplotlib, and an in-memory SAS visualization tool. This informed our pre-visualization manipulation strategy and revealed several data cleanup and transformation tasks, such as misaligned zip codes and spelling errors in address fields. An example visual
 
 -------------------------------------------------------------------------------------------------------------
 
@@ -63,7 +72,7 @@ Table of Contents:
          - output_filepath={output tsv filepath}: Output filepath. Default: 'data/yelpzip_joined.tsv'. **The output path MUST end in .tsv in order for the next script to run**
 
   4. Feature engineering on preprocessed data:
-     - Download [Yelp Academic Dataset V4](https://gatech.app.box.com/s/zvinxc5sj3bwmcoybh3cw4fslywz7ewe/folder/203853457121), files yelp_academic_dataset_business.json and yelp_academic_dataset_review.json to the data directory.
+     - Download [Yelp Academic Dataset V4](https://www.kaggle.com/datasets/yelp-dataset/yelp-dataset), files yelp_academic_dataset_business.json and yelp_academic_dataset_review.json to the data directory.
      -  Once pre-processing is finished, we can run the full feature engineering to add textual, behavioral, and TF-IDF features with python/preprocessing_pipeline.py
      - By default, this script is intended to run on the academic yelp dataset, and as such you will have to use the --input_path parameter to point it to the correct file, which is the output of the join_yelp_zip_data.py file from above.
        Usage: `python preprocessing_pipeline.py --input_path='../data/yelpzip_joined.tsv'`
