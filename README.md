@@ -19,7 +19,7 @@ The raw dataset was pre-processed and engineered using:
   - Synthetic minority over-sampling (SMOTE) for balancing the dataset
   - TF-IDF for sentiment analysis
   - Feature selection to remove highly correlated behavior and textual features
-![Development Flowchart](images/Flowchart.png | width=100)
+![Development Flowchart](images/Flowchart.png = 100x)
 *System design for model development*
 
 We compared the results of all combination of features, resampling techniques, and supervised learning algorithms. Final results are shown in the table below. The main evaluation used to quantify the performance of classification models were accuracy, precision, recall, and F1-score. From our data, it was evident that RF outperformed SVM, NB, KNN and LR using the combination of all features after removing multicollinearities with TF-IDF and using SMOTE as a resampling technique. It showed an overall accuracy of 77\%, 63\% recall for the minority class, and 79\% recall for the majority class in fake review detection. 
